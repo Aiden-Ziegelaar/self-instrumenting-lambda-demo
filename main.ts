@@ -59,7 +59,7 @@ class SelfInstrumentingStack extends TerraformStack {
           .update(
             fs.readFileSync(path.join(PWD, "dist/layers/instrumentation.zip")),
           )
-          .digest("hex"),
+          .digest("base64"),
       },
     );
 
@@ -88,7 +88,7 @@ class SelfInstrumentingStack extends TerraformStack {
         .update(
           fs.readFileSync(path.join(PWD, "dist/functions/hello-world.zip")),
         )
-        .digest("hex"),
+        .digest("base64"),
       role: lambdaRole.arn,
       filename: path.join(PWD, "dist/functions/hello-world.zip"),
       environment: {
