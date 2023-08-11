@@ -9,3 +9,8 @@ cdktf.log
 tsconfig.tsbuildinfo
 !jest.config.js
 !setup.js
+dist
+staging
+
+.DS_Store
+.env
