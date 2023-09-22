@@ -32,7 +32,7 @@ export class CloudfrontWafAspect implements IAspect {
 export class WafMinimumStandardsAspect implements IAspect {
   visit(node: IConstruct) {
     if (node instanceof aws.wafWebAcl.WafWebAcl) {
-      if (checkWafRulesValid(node.rules)) {
+      if (!checkWafRulesValid(node.rules)) {
         Annotations.of(node).addError(
           'WAF does not meet minimum standards,' +
           'see companydocs.com/waf for more info'
