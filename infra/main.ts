@@ -21,7 +21,7 @@ export class CloudfrontWafPunitiveAspect implements IAspect {
 
   visit(node: IConstruct) {
     if (node instanceof aws.cloudfrontDistribution.CloudfrontDistribution) {
-      if (!node.webAclId) {
+      if (!node.webAclIdInput) {
         Annotations.of(node).addError("No WAF on CloudFront Distribution")
       }
     }
@@ -33,7 +33,7 @@ export class CloudfrontWafAspect implements IAspect {
 
   visit(node: IConstruct) {
     if (node instanceof aws.cloudfrontDistribution.CloudfrontDistribution) {
-      if (!node.webAclId) {
+      if (!node.webAclIdInput) {
         Annotations.of(node).addInfo("Added default WAF to Cloudfront")
         node.webAclId = this.wafArn;
       }
