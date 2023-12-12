@@ -28,7 +28,7 @@ export class CloudfrontWafPunitiveAspect implements IAspect {
   }
 }
 
-export class CloudfrontWafAspect implements IAspect {
+export class CloudfrontWafRemedialAspect implements IAspect {
   constructor(private wafArn: string) {}
 
   visit(node: IConstruct) {
