@@ -5,7 +5,7 @@ import * as crypto from "crypto";
 import * as fs from "fs";
 
 import { IConstruct, Construct } from "constructs";
-import { IAspect, Aspects, App, TerraformStack, Annotations } from "cdktf";
+import { IAspect, Aspects, App, TerraformStack, Annotations, TerraformOutput } from "cdktf";
 import * as aws from "@cdktf/provider-aws";
 
 const PWD = process.cwd();
@@ -110,7 +110,7 @@ class SelfInstrumentingStack extends TerraformStack {
       "instrumentation-layer",
       {
         layerName: `${APP_NAME}_instrumentation-layer`,
-        compatibleRuntimes: ["nodejs18.x"],
+        compatibleRuntimes: ["nodejs20.x"],
         filename: path.join(PWD, "dist/layers/instrumentation.zip"),
         sourceCodeHash: crypto
           .createHash("sha256")
@@ -137,9 +137,9 @@ class SelfInstrumentingStack extends TerraformStack {
       }),
     });
 
-    new aws.lambdaFunction.LambdaFunction(this, "hello-world-lambda", {
+    const lambdaFunction = new aws.lambdaFunction.LambdaFunction(this, "hello-world-lambda", {
       functionName: `${APP_NAME}_hello-world-lambda`,
-      runtime: "nodejs18.x",
+      runtime: "nodejs20.x",
       handler: "index.handler",
       sourceCodeHash: crypto
         .createHash("sha256")
@@ -155,6 +155,15 @@ class SelfInstrumentingStack extends TerraformStack {
         },
       },
     });
+
+    const lambdaUrl = new aws.lambdaFunctionUrl.LambdaFunctionUrl(this, "hello-world-lambda-url", {
+      functionName: lambdaFunction.functionName,
+      authorizationType: "NONE"
+    })
+
+    new TerraformOutput(this, "function-url", {
+      value: lambdaUrl.functionUrl
+    })
 
     Aspects.of(this).add(
       new LambdaLayerInstrumentAspect(instrumentationLayer.arn),

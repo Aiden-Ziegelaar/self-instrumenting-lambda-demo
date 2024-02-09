@@ -13,7 +13,7 @@ format:
 	npx prettier --write .
 
 test:
-	npx run test
+	npm run test
 
 build:
 	npx ts-node ./build.mjs
